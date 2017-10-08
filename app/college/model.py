@@ -19,7 +19,26 @@ class College():
             print res['created']
         return True
 
-    def fetch_all(self,list_type):
-        
-        return 'x'
+    def fetch_all(self, univ, cities, fees, marks):
+        es = Elasticsearch(config.ES_ENDPOINT)
+        query = "(university : '')"
+        if univ:
+            query = "(university : %s)" % ' OR '.join(univ)
+        if cities:
+            query += " OR (city : %s)"  % ' OR '.join(cities)
+
+        body = {
+                "query": {
+                    "query_string": {
+                        "query": query
+                    }
+                }
+            }
+        print body
+        res = es.search(index="college", doc_type='college_info', body= body)
+        res_list = res['hits']['hits']
+        response_list = []
+        for r in res_list:
+            response_list.append(r['_source'])
+        return response_list
     
