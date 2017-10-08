@@ -21,7 +21,7 @@ class College():
 
     def fetch_all(self, univ, cities, fees, marks):
         es = Elasticsearch(config.ES_ENDPOINT)
-        query = "(university : '')"
+        query = "(university_name : '')"
         if univ:
             query = "(university_name : %s)" % ' OR '.join(univ)
         if cities:
