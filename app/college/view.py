@@ -6,5 +6,6 @@ def list_college(parameters):
 
 def add_college(parameters):
     response = {"message": [], "status": "failed"}
+    csvfile = parameters['csvfile']
     return response
     
