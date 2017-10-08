@@ -13,6 +13,7 @@ def list_college(parameters):
     cl = College()
     result = cl.fetch_all(university, city, fees, marks)
     response['data'] = result
+    response['status'] = 'success'
     return response
 
 def add_college(parameters):
