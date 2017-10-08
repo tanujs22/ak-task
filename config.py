@@ -4,7 +4,7 @@ DEBUG = True
 
 TEST_ENV = False
 
-PORT = 8005
+PORT = 8000
 
 #======================================================================
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
