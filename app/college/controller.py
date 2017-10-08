@@ -16,6 +16,6 @@ def get_college():
 @college_api.route('/add', methods=['POST'])
 @crossdomain(origin='*')
 def save_college():
-	parameters = request.get_json()
+	parameters = CombinedMultiDict([request.args, request.files])
 	response = add_college(parameters)
 	return respond(response)
