@@ -23,7 +23,7 @@ class College():
         es = Elasticsearch(config.ES_ENDPOINT)
         query = "(university : '')"
         if univ:
-            query = "(university : %s)" % ' OR '.join(univ)
+            query = "(university_name : %s)" % ' OR '.join(univ)
         if cities:
             query += " OR (city : %s)"  % ' OR '.join(cities)
 
