@@ -15,6 +15,8 @@ class College():
         es = Elasticsearch(config.ES_ENDPOINT)
         reader = csv.DictReader(csvfile)
         for row in reader:
+            row['fees'] = int(row['fees'])
+            row['class_12_marks'] = int(row['class_12_marks'])
             res = es.index(index="college", doc_type='college_info', body=row)
             print res['created']
         return True
@@ -26,14 +28,22 @@ class College():
             query = "(university_name : %s)" % ' OR '.join(univ)
         if cities:
             query += " OR (city : %s)"  % ' OR '.join(cities)
-
         body = {
-                "query": {
-                    "query_string": {
-                        "query": query
-                    }
-                }
-            }
+                "query" : {
+                        "bool" : {
+                                "filter" : {
+                                        "range" : {"fees" : {"gte" : 0, "lte" : 50000}}
+                                },
+
+                                "must" : {
+                                        "query_string" : {
+                                                "query" : query
+                                        }
+                                }
+                        }
+                }       
+        }
+        
         print body
         res = es.search(index="college", doc_type='college_info', body= body)
         res_list = res['hits']['hits']
