@@ -7,11 +7,11 @@ def list_college(parameters):
     fees = parameters.get('fees', '')
     marks = parameters.get('marks', '')
     if university:
-        univ = university.split(',')
+        university = university.split(',')
     if city:
-        cities = city.split(',')
+        city = city.split(',')
     cl = College()
-    result = cl.fetch_all(univ, cities, fees, marks)
+    result = cl.fetch_all(university, city, fees, marks)
     response['data'] = result
     return response
 
