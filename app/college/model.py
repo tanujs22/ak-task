@@ -17,6 +17,7 @@ class College():
         for row in reader:
             row['fees'] = int(row['fees'])
             row['class_12_marks'] = int(row['class_12_marks'])
+            row['course_duration'] = int(row['course_duration'])
             res = es.index(index="college", doc_type='college_info', body=row)
             print res['created']
         return True
@@ -31,9 +32,9 @@ class College():
         body = {
                 "query" : {
                         "bool" : {
-                                "filter" : {
-                                        "range" : {"fees" : {"gte" : 0, "lte" : 50000}}
-                                },
+                                "filter" : [
+                                        
+                                ],
 
                                 "must" : {
                                         "query_string" : {
@@ -43,7 +44,26 @@ class College():
                         }
                 }       
         }
-        
+        if fees and marks:
+            print 'both'
+            fees = fees.split('-')
+            fees = {"gte" : fees[0], "lte" : fees[1]}
+            marks = marks.split('-')
+            marks = {"gte" : marks[0], "lte" : marks[1]}
+            body['query']['bool']['filter'] = [
+                                                {'range' : {'fees': fees }},
+                                                {'range' : {'class_12_marks': marks }}
+                                            ]
+        if fees and not marks:
+            print 'fees'
+            fees = fees.split('-')
+            fees = {"gte" : fees[0], "lte" : fees[1]}
+            body['query']['bool']['filter'] = {'range' : {'fees': fees }}
+        if marks and not fees:
+            print 'marks'
+            marks = marks.split('-')
+            marks = {"gte" : marks[0], "lte" : marks[1]}
+            body['query']['bool']['filter'] = {'range' : {'class_12_marks': marks }}
         print body
         res = es.search(index="college", doc_type='college_info', body= body)
         res_list = res['hits']['hits']
