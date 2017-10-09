@@ -44,6 +44,9 @@ class College():
                         }
                 }       
         }
+        if not univ and not cities:
+            body['query']['bool']['must'] = {"match_all" : {}}
+
         if fees and marks:
             print 'both'
             fees = fees.split('-')
@@ -54,16 +57,19 @@ class College():
                                                 {'range' : {'fees': fees }},
                                                 {'range' : {'class_12_marks': marks }}
                                             ]
+
         if fees and not marks:
             print 'fees'
             fees = fees.split('-')
             fees = {"gte" : fees[0], "lte" : fees[1]}
             body['query']['bool']['filter'] = {'range' : {'fees': fees }}
+
         if marks and not fees:
             print 'marks'
             marks = marks.split('-')
             marks = {"gte" : marks[0], "lte" : marks[1]}
             body['query']['bool']['filter'] = {'range' : {'class_12_marks': marks }}
+
         print body
         res = es.search(index="college", doc_type='college_info', body= body)
         res_list = res['hits']['hits']
